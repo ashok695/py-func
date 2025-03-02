@@ -1,0 +1,116 @@
+err := client.Query(`INSERT into status(id,category,color,mongoid,status,workitem) VALUES(?,?,?,?,?,?)`,
+			status.ID, status.Category, status.Color, status.MongoID, status.Status, status.WorkItem).Exec()
+
+
+err := client.Query(`INSERT into types(id,mongoid,name,project,type) VALUES(?,?,?,?,?)`,
+			user.ID, user.MongoID, user.Name, user.Project, user.Type).Exec()
+
+err := client.Query(`INSERT into users(id,fullname,mongoid,project,team) VALUES(?,?,?,?,?)`,
+			user.ID, user.FullName, user.MongoID, user.Project, user.Team).Exec()
+
+
+err := client.Query(`INSERT into subphases(id,constraintdate,constrainttype,delaylog,ganttduration,mongoid,orderid,phase,project,role,tasktype,title,type,workstream) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+			task.ID, task.ConstraintDate, task.ConstraintType, task.DelayLog, task.GanttDuration, task.MongoID, task.OrderID, task.Phase, task.Project, task.Role, task.TaskType, task.Title, task.Type, task.Workstream).Exec()
+
+
+for _, task := range tasksData {
+		err := client.Query(`INSERT into tasklists(id,mongoid,orderid,phase,reftaskid,subphaseid,title) VALUES(?,?,?,?,?,?,?)`,
+			task.ID, task.MongoID, task.OrderID, task.Phase, task.RefTaskID, task.SubPhaseID, task.Title).Exec()
+		if err != nil {
+			fmt.Println("error", err.Error())
+			return c.JSON("error")
+		}
+	}
+	return c.JSON("success")
+
+
+
+
+
+
+
+
+// Code for tasks
+func insertStatusData(c *fiber.Ctx) error {
+
+	for _, task := range tasksData {
+		err := client.Query(`INSERT into tasklists(project,id,activepercentage,actualend,actualstart,
+		assignedto,constraintdate,constrainttype,delaylog,duration,mongoid,orderid,phase,plannedfrom,
+		plannedto,priority,reftaskid,roletype,status,subphaseid,tasktype,title,type,workstream) 
+		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, task.Project, task.ID, task.ActivePercentage, task.CompletedOn,
+			task.StartedOn, task.AssignedTo, task.ConstraintDate, task.ConstraintType, task.DelayLog, task.GanttDuration, task.MongoID,
+			task.OrderID, task.Phase, task.PlannedFrom, task.PlannedTo, task.Priority, task.RefTaskID, task.Role,
+			task.Status, task.SubPhaseID, task.TaskType, task.Title, task.Type, task.Workstream).Exec()
+
+		if err != nil {
+			fmt.Println("error in data", err.Error())
+		}
+	}
+	return c.JSON("success")
+}
+
+// USERS
+for _, task := range userData {
+		err := client.Query(`INSERT into users(project,id,email,fullname,mongoid,
+		role,team) 
+		VALUES(?,?,?,?,?,?,?)`, task.Project, task.ID, task.Email, task.FullName,
+			task.MongoID, task.Role, task.Team).Exec()
+
+		if err != nil {
+			fmt.Println("error in data", err.Error())
+		}
+	}
+	return c.JSON("success")
+
+
+// Status
+for _, task := range statusData {
+		err := client.Query(`INSERT into status(project,id,category,color,mongoid,
+		status,workitem) 
+		VALUES(?,?,?,?,?,?,?)`, task.Project, task.ID, task.Category, task.Color,
+			task.MongoID, task.Status, task.WorkItem).Exec()
+
+		if err != nil {
+			fmt.Println("error in data", err.Error())
+		}
+}
+
+// types:
+for _, task := range typesData {
+		err := client.Query(`INSERT into types(project,id,mongoid,name,type
+		) 
+		VALUES(?,?,?,?,?)`, task.Project, task.ID,
+			task.MongoID, task.Name, task.Type).Exec()
+
+		if err != nil {
+			fmt.Println("error in data", err.Error())
+		}
+}
+
+// Teams data
+for _, task := range teamsData {
+		err := client.Query(`INSERT into teams(project,id,mongoid,title,type
+		) 
+		VALUES(?,?,?,?,?)`, task.Project, task.ID,
+			task.MongoID, task.Title, task.Type).Exec()
+
+		if err != nil {
+			fmt.Println("error in data", err.Error())
+		}
+}
+	return c.JSON("success")
+
+
+//subphase
+
+for _, task := range subPhaseData {
+		err := client.Query(`INSERT into subphases(project,id,constraintdate,constrainttype,
+		delaylog,duration,mongoid,orderid,phase,role,title,type,workstream 
+		) 
+		VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`, task.Project, task.ID, task.ConstraintDate, task.ConstraintType,
+			task.DelayLog, task.GanttDuration, task.MongoID, task.OrderID, task.Phase, task.Role, task.Title, task.Type, task.Workstream).Exec()
+
+		if err != nil {
+			fmt.Println("error in data", err.Error())
+		}
+	}
